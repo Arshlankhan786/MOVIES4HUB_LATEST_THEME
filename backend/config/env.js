@@ -17,9 +17,9 @@ module.exports = {
   },
 
   externalApis: {
-    movieApi: process.env.MOVIE_API_URL || 'https://movies4hub-movie-api-production.up.railway.app',
-    animeApi: process.env.ANIME_API_URL || 'https://animeverseapi.vercel.app',
-    tmdbApiKey: process.env.TMDB_API_KEY || '0b5803aeab6bb79c26d84afd16b32274',
+    movieApi: process.env.MOVIE_API_URL || 'MOVIE_API_URL',
+    animeApi: process.env.ANIME_API_URL || 'ANIME_API_URL',
+    tmdbApiKey: process.env.TMDB_API_KEY || 'TMDB_API_KEY',
   },
 
   jwt: {
@@ -28,6 +28,7 @@ module.exports = {
   },
 
   cors: {
-    origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+    origin: process.env.CORS_ORIGIN || 'http://yourdomain.com',
   },
 };
+
