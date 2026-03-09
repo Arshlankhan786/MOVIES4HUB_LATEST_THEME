@@ -1,0 +1,135 @@
+/* ─── Pulse Animation ─── */
+@keyframes skeleton-pulse {
+    0% {
+        opacity: 0.6;
+    }
+
+    50% {
+        opacity: 0.3;
+    }
+
+    100% {
+        opacity: 0.6;
+    }
+}
+
+.skeleton-pulse {
+    animation: skeleton-pulse 1.4s ease-in-out infinite;
+    background: var(--bg-tertiary) !important;
+    border-radius: 8px;
+}
+
+/* ─── Card ─── */
+.skeleton-card {
+    flex: 0 0 160px;
+}
+
+.skeleton-card__poster {
+    aspect-ratio: 3/4.2;
+    border-radius: 10px;
+}
+
+.skeleton-card__info {
+    padding: 10px 4px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.skeleton-card__title {
+    height: 12px;
+    width: 80%;
+    border-radius: 4px;
+}
+
+.skeleton-card__sub {
+    height: 10px;
+    width: 50%;
+    border-radius: 4px;
+}
+
+/* ─── Row ─── */
+.skeleton-row {
+    margin-top: 36px;
+}
+
+.skeleton-row__header {
+    margin-bottom: 16px;
+}
+
+.skeleton-row__title {
+    height: 22px;
+    width: 200px;
+    border-radius: 6px;
+}
+
+.skeleton-row__scroll {
+    display: flex;
+    gap: 14px;
+    overflow: hidden;
+}
+
+/* ─── Hero ─── */
+.skeleton-hero {
+    height: 520px;
+    display: flex;
+    align-items: flex-end;
+    background: var(--bg-secondary) !important;
+}
+
+.skeleton-hero__content {
+    padding: 0 48px 48px;
+    width: 100%;
+    max-width: 550px;
+}
+
+.skeleton-hero__badge {
+    height: 28px;
+    width: 140px;
+    margin-bottom: 14px;
+    border-radius: 20px;
+}
+
+.skeleton-hero__title {
+    height: 40px;
+    width: 350px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+}
+
+.skeleton-hero__meta {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.skeleton-hero__tag {
+    height: 26px;
+    width: 75px;
+    border-radius: 5px;
+}
+
+.skeleton-hero__btns {
+    display: flex;
+    gap: 10px;
+}
+
+.skeleton-hero__btn {
+    height: 44px;
+    width: 130px;
+    border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+    .skeleton-hero {
+        height: 400px;
+    }
+
+    .skeleton-hero__content {
+        padding: 0 20px 30px;
+    }
+
+    .skeleton-card {
+        flex: 0 0 130px;
+    }
+}

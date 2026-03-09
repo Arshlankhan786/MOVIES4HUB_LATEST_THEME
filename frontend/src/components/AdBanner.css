@@ -1,0 +1,13 @@
+.ad-banner {
+    padding: 16px;
+    text-align: center;
+    background: var(--bg-secondary);
+    border: 1px dashed var(--border-color);
+    border-radius: 8px;
+    margin: 16px 0;
+    opacity: 0.9;
+}
+
+.ad-banner__item {
+    padding: 8px 0;
+}

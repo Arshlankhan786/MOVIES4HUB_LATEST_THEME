@@ -1,0 +1,206 @@
+.player-page {
+    padding-top: 64px;
+    min-height: 100vh;
+    background: var(--bg-primary);
+}
+
+.player-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.player-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #000;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+}
+
+.player-video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.player-placeholder {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    color: var(--text-muted);
+}
+
+.player-info {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px 40px;
+}
+
+.player-info__title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 24px 0 12px;
+}
+
+.player-info__meta {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.player-info__tag {
+    padding: 4px 12px;
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: 1px solid var(--border-color);
+    text-transform: capitalize;
+}
+
+.player-info__desc {
+    color: var(--text-secondary);
+    line-height: 1.7;
+    font-size: 0.95rem;
+    max-width: 800px;
+}
+
+.player-error {
+    text-align: center;
+    padding: 100px 24px;
+    color: var(--text-muted);
+}
+
+.player-error h2 {
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+/* ─── Server / Quality Selector ─────────────────────────────────── */
+.player-servers {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 14px 24px 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    align-items: center;
+}
+
+.player-servers__group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.player-servers__label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: rgba(255, 255, 255, 0.35);
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.player-servers__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.player-servers__btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.65);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.18s ease;
+    white-space: nowrap;
+}
+
+.player-servers__btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.15);
+    color: #fff;
+}
+
+.player-servers__btn--active {
+    background: rgba(229, 9, 20, 0.12) !important;
+    border-color: rgba(229, 9, 20, 0.55) !important;
+    color: #e50914 !important;
+    box-shadow: 0 0 10px rgba(229, 9, 20, 0.15);
+}
+
+.player-servers__btn--quality.player-servers__btn--active {
+    background: rgba(37, 99, 235, 0.15) !important;
+    border-color: rgba(37, 99, 235, 0.55) !important;
+    color: #60a5fa !important;
+}
+
+.player-servers__btn--disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* ─── Overlays inside player-wrapper ────────────────────────────── */
+.player-loading-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: rgba(0, 0, 0, 0.72);
+    z-index: 8;
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 14px;
+    border-radius: 16px;
+}
+
+.player-loading-overlay--error {
+    background: rgba(0, 0, 0, 0.88);
+    color: #ff6b6b;
+    text-align: center;
+    padding: 0 32px;
+}
+
+.player-retry-btn {
+    margin-top: 4px;
+    padding: 9px 28px;
+    background: #e50914;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.player-retry-btn:hover { background: #f40612; }
+
+/* ─── Responsive ─────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+    .player-servers { padding: 10px 16px 0; gap: 12px; }
+    .player-servers__btn { padding: 7px 12px; font-size: 12px; }
+}

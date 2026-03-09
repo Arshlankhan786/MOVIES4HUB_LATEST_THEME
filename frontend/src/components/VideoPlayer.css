@@ -1,0 +1,708 @@
+/*
+ * Movies4Hub Streaming Platform
+ * Created by Pathan Arshlan
+ * GitHub: https://github.com/Arshlankhan786
+ * Copyright © Pathan Arshlan. Removing credits or copyright may result in legal action.
+ *
+ * frontend/components/VideoPlayer.css
+ * OTT-Grade Player — Netflix / Prime Video style
+ */
+
+/* ═══════════════════════════════════════════
+   Root container
+   ═══════════════════════════════════════════ */
+.video-player {
+    position: relative;
+    width: 100%;
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+    user-select: none;
+    -webkit-user-select: none;
+    /* Subtle glow that echoes the brand red when active */
+    box-shadow: 0 4px 32px rgba(0, 0, 0, 0.7);
+}
+
+.video-player__video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    background: #000;
+}
+
+/* ─── Iframe embed for anime ─── */
+.video-player__embed {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: #000;
+}
+
+/* ═══════════════════════════════════════════
+   Gradient overlay — dual-band vignette
+   (bottom band for controls, top band for title)
+   ═══════════════════════════════════════════ */
+.video-player__gradient {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(to top,
+            rgba(0, 0, 0, 0.92) 0%,
+            rgba(0, 0, 0, 0.5)  18%,
+            transparent          38%),
+        linear-gradient(to bottom,
+            rgba(0, 0, 0, 0.65) 0%,
+            transparent          22%);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.video-player:hover .video-player__gradient,
+.video-player--controls-visible .video-player__gradient {
+    opacity: 1;
+}
+
+/* ═══════════════════════════════════════════
+   Title bar (top)
+   ═══════════════════════════════════════════ */
+.video-player__title-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 18px 22px 28px;
+    z-index: 5;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+}
+
+.video-player:hover .video-player__title-bar,
+.video-player--controls-visible .video-player__title-bar {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.video-player__title {
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
+}
+
+/* ═══════════════════════════════════════════
+   Loading overlay
+   ═══════════════════════════════════════════ */
+.video-player__loader {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 6;
+    gap: 16px;
+}
+
+.video-player__spinner {
+    width: 54px;
+    height: 54px;
+    border: 3px solid rgba(255, 255, 255, 0.08);
+    border-top-color: #e50914;
+    border-right-color: rgba(229, 9, 20, 0.4);
+    border-radius: 50%;
+    animation: vp-spin 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes vp-spin {
+    to { transform: rotate(360deg); }
+}
+
+.video-player__loader-text {
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 13px;
+    letter-spacing: 0.6px;
+    font-weight: 400;
+}
+
+/* ═══════════════════════════════════════════
+   Mid-playback buffering indicator
+   Two rings — outer slow, inner fast — Netflix look
+   ═══════════════════════════════════════════ */
+.video-player__buffering {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 5;
+    width: 52px;
+    height: 52px;
+}
+
+.video-player__buffering-ring {
+    position: absolute;
+    inset: 0;
+    border: 2.5px solid transparent;
+    border-top-color: rgba(229, 9, 20, 0.9);
+    border-right-color: rgba(229, 9, 20, 0.25);
+    border-radius: 50%;
+    animation: vp-spin 0.85s linear infinite;
+}
+
+.video-player__buffering-ring--delay {
+    inset: 6px;
+    border-top-color: rgba(255, 255, 255, 0.6);
+    border-right-color: rgba(255, 255, 255, 0.15);
+    animation-duration: 0.6s;
+    animation-direction: reverse;
+}
+
+/* ═══════════════════════════════════════════
+   Error overlay
+   ═══════════════════════════════════════════ */
+.video-player__error {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.88);
+    z-index: 7;
+    gap: 14px;
+    color: #fff;
+}
+
+.video-player__error-icon { font-size: 46px; opacity: 0.7; }
+
+.video-player__error-msg {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.6);
+    max-width: 290px;
+    text-align: center;
+    line-height: 1.55;
+}
+
+.video-player__error-retry {
+    margin-top: 4px;
+    padding: 10px 36px;
+    background: #e50914;
+    border: none;
+    color: #fff;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    transition: background 0.2s, transform 0.15s;
+}
+
+.video-player__error-retry:hover {
+    background: #f40612;
+    transform: scale(1.04);
+}
+
+/* ═══════════════════════════════════════════
+   Tap zones — invisible overlays for gesture detection
+   (Left 30% / Center 40% / Right 30%)
+   ═══════════════════════════════════════════ */
+.vp-zones {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    z-index: 3;
+    pointer-events: none; /* zones themselves don't intercept — parent container does */
+}
+
+.vp-zone {
+    height: 100%;
+}
+
+.vp-zone--left   { flex: 0 0 30%; }
+.vp-zone--center { flex: 1; }
+.vp-zone--right  { flex: 0 0 30%; }
+
+/* ═══════════════════════════════════════════
+   Seek flash animation
+   Appears on double-tap left (⏪) or right (⏩)
+   ═══════════════════════════════════════════ */
+.vp-seek-flash {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 88px;
+    height: 88px;
+    background: rgba(0, 0, 0, 0.52);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 8;
+    animation: vp-seek-appear 0.75s ease-out forwards;
+    gap: 2px;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border: 1.5px solid rgba(255, 255, 255, 0.18);
+}
+
+.vp-seek-flash--left  { left:  10%; }
+.vp-seek-flash--right { right: 10%; }
+
+.vp-seek-flash__icon  { font-size: 26px; line-height: 1; }
+.vp-seek-flash__label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+
+@keyframes vp-seek-appear {
+    0%   { opacity: 0;   transform: translateY(-50%) scale(0.65); }
+    18%  { opacity: 1;   transform: translateY(-50%) scale(1.08); }
+    75%  { opacity: 1;   transform: translateY(-50%) scale(1);    }
+    100% { opacity: 0;   transform: translateY(-50%) scale(1.02); }
+}
+
+/* ═══════════════════════════════════════════
+   Play-pulse — brief centre feedback on tap-to-play
+   ═══════════════════════════════════════════ */
+.vp-play-pulse {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 72px;
+    height: 72px;
+    background: rgba(229, 9, 20, 0.75);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 8;
+    animation: vp-pulse-out 0.5s ease-out forwards;
+}
+
+.vp-play-pulse svg {
+    width: 28px;
+    height: 28px;
+    fill: #fff;
+    margin-left: 4px;
+}
+
+@keyframes vp-pulse-out {
+    0%   { opacity: 0.9; transform: translate(-50%, -50%) scale(0.9); }
+    50%  { opacity: 1;   transform: translate(-50%, -50%) scale(1.08); }
+    100% { opacity: 0;   transform: translate(-50%, -50%) scale(1.3); }
+}
+
+/* ═══════════════════════════════════════════
+   Centre play/pause button
+   Large, OTT-style, fades when playing
+   ═══════════════════════════════════════════ */
+.video-player__center-play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.85);
+    width: 76px;
+    height: 76px;
+    background: rgba(229, 9, 20, 0.88);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.28s ease, transform 0.28s ease, box-shadow 0.2s;
+    box-shadow: 0 0 0   rgba(229, 9, 20, 0);
+}
+
+.video-player__center-play--visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(-50%, -50%) scale(1);
+    box-shadow: 0 0 36px rgba(229, 9, 20, 0.45);
+}
+
+.video-player__center-play:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+    box-shadow: 0 0 48px rgba(229, 9, 20, 0.6);
+}
+
+.video-player__center-play svg {
+    width: 30px;
+    height: 30px;
+    fill: #fff;
+    /* offset play icon to look optically centred */
+}
+
+.video-player__center-play svg polygon { margin-left: 4px; }
+
+/* ═══════════════════════════════════════════
+   Controls bar
+   ═══════════════════════════════════════════ */
+.video-player__controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 0 16px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 4;
+}
+
+.video-player:hover .video-player__controls,
+.video-player--controls-visible .video-player__controls {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ─── Progress / scrubber bar ─── */
+.video-player__progress {
+    position: relative;
+    height: 20px;         /* large hit-area for easier scrubbing */
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 0 2px;
+}
+
+.video-player__progress-track {
+    position: relative;
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.16);
+    border-radius: 3px;
+    transition: height 0.15s ease;
+    overflow: visible;
+}
+
+.video-player__progress:hover .video-player__progress-track {
+    height: 6px;
+}
+
+.video-player__progress-buffered {
+    position: absolute;
+    top: 0; left: 0;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.28);
+    border-radius: 3px;
+    pointer-events: none;
+    transition: width 0.3s linear;
+}
+
+.video-player__progress-filled {
+    position: absolute;
+    top: 0; left: 0;
+    height: 100%;
+    background: #e50914;
+    border-radius: 3px;
+    pointer-events: none;
+    transition: width 0.1s linear;
+}
+
+/* Gradient highlight on the red bar */
+.video-player__progress-filled::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 40%;
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 3px 3px 0 0;
+}
+
+.video-player__progress-thumb {
+    position: absolute;
+    top: 50%;
+    width: 14px;
+    height: 14px;
+    background: #fff;
+    border: 2.5px solid #e50914;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.15s, transform 0.15s;
+    pointer-events: none;
+    box-shadow: 0 0 8px rgba(229, 9, 20, 0.55), 0 2px 6px rgba(0,0,0,0.4);
+    z-index: 2;
+}
+
+.video-player__progress:hover .video-player__progress-thumb {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.15);
+}
+
+/* Floating time-stamp tooltip above thumb */
+.video-player__progress-time {
+    position: absolute;
+    top: -26px;
+    transform: translateX(-50%);
+    background: rgba(15, 15, 20, 0.9);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 7px;
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.15s;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 5;
+}
+
+.video-player__progress:hover .video-player__progress-time {
+    opacity: 1;
+}
+
+/* ─── Controls row ─── */
+.video-player__controls-row {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.video-player__controls-left {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex: 1;
+}
+
+.video-player__controls-right {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    margin-left: auto;
+}
+
+/* ─── Icon buttons ─── */
+.video-player__btn {
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    padding: 7px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.18s ease, transform 0.12s ease;
+    font-size: 13px;
+    font-weight: 500;
+    flex-shrink: 0;
+}
+
+.video-player__btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+    transform: scale(1.08);
+}
+
+.video-player__btn:active {
+    transform: scale(0.94);
+}
+
+.video-player__btn svg {
+    width: 22px;
+    height: 22px;
+    fill: #fff;
+    display: block;
+}
+
+/* Seek buttons slightly smaller */
+.video-player__btn--seek svg {
+    width: 20px;
+    height: 20px;
+}
+
+.video-player__time {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    padding: 0 8px;
+    white-space: nowrap;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+/* ─── Volume ─── */
+.video-player__volume-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0;
+}
+
+.video-player__volume-slider {
+    width: 0;
+    overflow: hidden;
+    transition: width 0.25s ease, margin-left 0.25s ease, opacity 0.25s;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.28);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+    opacity: 0;
+}
+
+.video-player__volume-wrap:hover .video-player__volume-slider {
+    width: 76px;
+    margin-left: 4px;
+    opacity: 1;
+}
+
+.video-player__volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 13px;
+    height: 13px;
+    background: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+}
+
+.video-player__volume-slider::-moz-range-thumb {
+    width: 13px;
+    height: 13px;
+    background: #fff;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+}
+
+/* ─── Speed / popup menus ─── */
+.video-player__popup-menu {
+    position: absolute;
+    bottom: 48px;
+    background: rgba(12, 12, 20, 0.97);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 10px;
+    padding: 6px 0;
+    z-index: 10;
+    min-width: 110px;
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+    animation: vp-popup-in 0.15s ease-out;
+}
+
+@keyframes vp-popup-in {
+    from { opacity: 0; transform: translateY(6px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0)   scale(1);    }
+}
+
+.video-player__popup-menu--speed  { right: 88px; }
+.video-player__popup-menu--quality{ right: 50px; }
+
+.video-player__popup-option {
+    display: block;
+    width: 100%;
+    padding: 9px 18px;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 13px;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s, color 0.15s;
+    font-weight: 500;
+}
+
+.video-player__popup-option:hover {
+    background: rgba(255, 255, 255, 0.07);
+    color: #fff;
+}
+
+.video-player__popup-option--active {
+    color: #e50914;
+    font-weight: 700;
+}
+
+/* ═══════════════════════════════════════════
+   Fullscreen overrides
+   ═══════════════════════════════════════════ */
+.video-player:fullscreen,
+.video-player:-webkit-full-screen {
+    border-radius: 0;
+}
+
+/* ═══════════════════════════════════════════
+   Responsive — mobile
+   ═══════════════════════════════════════════ */
+@media (max-width: 640px) {
+    .video-player__controls {
+        padding: 0 10px 8px;
+        gap: 4px;
+    }
+
+    .video-player__btn {
+        padding: 6px;
+    }
+
+    .video-player__btn svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .video-player__btn--seek svg {
+        width: 17px;
+        height: 17px;
+    }
+
+    .video-player__time {
+        font-size: 11px;
+        padding: 0 5px;
+    }
+
+    .video-player__title {
+        font-size: 13px;
+    }
+
+    .vp-seek-flash {
+        width: 76px;
+        height: 76px;
+    }
+
+    .vp-seek-flash__icon  { font-size: 22px; }
+    .vp-seek-flash__label { font-size: 11px; }
+
+    .video-player__center-play {
+        width: 60px;
+        height: 60px;
+    }
+
+    .video-player__center-play svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    /* Hide seek timestamp tooltip on small screens */
+    .video-player__progress-time { display: none; }
+}
+
+/* ═══════════════════════════════════════════
+   Very small phones
+   ═══════════════════════════════════════════ */
+@media (max-width: 400px) {
+    .video-player__volume-wrap { display: none; }
+    .video-player__btn--seek   { display: none; }
+}
